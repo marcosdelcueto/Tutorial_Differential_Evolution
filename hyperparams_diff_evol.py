@@ -38,8 +38,8 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 #surf = ax.plot_surface(x, y, f,linewidth=0, antialiased=False,cmap='viridis')
 ax.scatter(x1,y1,f1,s=50,zorder=4)
-file_name = 'Figure2.png'
-plt.savefig(file_name,format='png',dpi=600)
+#file_name = 'Figure2.png'
+#plt.savefig(file_name,format='png',dpi=600)
 #plt.show()
 
 X = []
@@ -58,7 +58,7 @@ y=np.array(y)
 ######################################################################################################
 def KRR_function(hyperparams,X,y):
     alpha_value,gamma_value = hyperparams
-    kf = KFold(n_splits=10,shuffle=True,random_state=None)
+    kf = KFold(n_splits=10,shuffle=True,random_state=2020)
     validation=kf.split(X)
     #alpha_value = 1.0
     #gamma_value = 1.0
@@ -82,11 +82,11 @@ def KRR_function(hyperparams,X,y):
     r_pearson,_=pearsonr(y_test_total,y_pred_total)
     #print('alpha: %.6f . gamma: %.6f . rmse: %.3f .  r: %.3f' %(alpha_value,gamma_value,rmse,r_pearson))
     print('%.20f %.20f %.12f %.12f' %(alpha_value,gamma_value,rmse,r_pearson))
-    #print('#################')A
+    #print('#################')
     return rmse
 ######################################################################################################
-KRR_alpha_lim = (0.00001,1)
-KRR_gamma_lim = (0.1,10)
+KRR_alpha_lim = (0.0,10.0)
+KRR_gamma_lim = (0.0,10.0)
 bounds = [KRR_alpha_lim] + [KRR_gamma_lim]
 mini_args = (X,y)
 

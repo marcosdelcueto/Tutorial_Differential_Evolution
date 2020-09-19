@@ -17,8 +17,6 @@ x, y = np.meshgrid(x, y)
 f = np.sin(x) + np.cos(y)
 
 # Points to make database
-#x1 = np.arange(-5,5.01,1.0)
-#y1 = np.arange(-5,5.01,1.0)
 x1 = np.arange(-10,10.01,1.0)
 y1 = np.arange(-10,10.01,1.0)
 x1, y1 = np.meshgrid(x1, y1)
@@ -28,30 +26,13 @@ random.seed(2020)
 for i in range(len(f1)):
     for j in range(len(f1[0])):
         rnd_number = random.uniform(-2,2)
-        #print('RND:', rnd_number)
         f1[i][j] = f1[i][j] + rnd_number
-#print(f)
-#print(len(f1), len(f1[0]))
 # Print function
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-#surf = ax.plot_surface(x, y, f,linewidth=0, antialiased=False,cmap='viridis')
-ax.scatter(x1,y1,f1,s=50,zorder=4)
-file_name = 'Figure2.png'
-plt.savefig(file_name,format='png',dpi=600)
-#plt.show()
-
-#X = np.concatenate((x1,y1),axis=0)
-#X = np.meshgrid(x1, y1)
-
-#print('X:')
-#print(X)
-#print('####')
-
-#print('x1:')
-#print(x1)
-#print('y1:')
-#print(y1)
+#fig = plt.figure()
+#ax = fig.gca(projection='3d')
+#ax.scatter(x1,y1,f1,s=50,zorder=4)
+#file_name = 'Figure2.png'
+#plt.savefig(file_name,format='png',dpi=600)
 
 X = []
 for i in range(len(f1)):
@@ -64,25 +45,17 @@ for i in range(len(f1)):
 y=f1.flatten()
 X=np.array(X)
 y=np.array(y)
-
-#print('X:')
-#print(X)
-#print(len(X))
-#print('####')
-
-#print('y:')
-#print(y)
-#print(len(y))
-#print('####')
 #########################
-
-#validation=loo.split(x1)
-
-for alpha_value in [pow(10,-12),pow(10,-11),pow(10,-10),pow(10,-9),pow(10,-8),pow(10,-7),pow(10,-6),pow(10,-5),pow(10,-4),pow(10,-3),pow(10,-2),pow(10,-1),pow(10,0),pow(10,1)]:
-    for gamma_value in np.arange(0.000,1.0,0.002):
-#for alpha_value in np.arange(0.00000001,0.000001,0.00000001):
-    #for gamma_value in np.arange(0.000,0.100,0.001):
-        kf = KFold(n_splits=10,shuffle=True,random_state=None)
+graph_x = []
+graph_y = []
+graph_z = []
+for alpha_value in np.arange(-5.0,2.2,0.2):
+    alpha_value = pow(10,alpha_value)
+    graph_x_row = []
+    graph_y_row = []
+    graph_z_row = []
+    for gamma_value in np.arange(0.0,20.1,0.1):
+        kf = KFold(n_splits=10,shuffle=True,random_state=2020)
         validation=kf.split(X)
         #alpha_value = 1.0
         #gamma_value = 1.0
@@ -105,6 +78,24 @@ for alpha_value in [pow(10,-12),pow(10,-11),pow(10,-10),pow(10,-9),pow(10,-8),po
         rmse = np.sqrt(mean_squared_error(y_test_total, y_pred_total))
         r_pearson,_=pearsonr(y_test_total,y_pred_total)
         #print('alpha: %.6f . gamma: %.6f . rmse: %.3f .  r: %.3f' %(alpha_value,gamma_value,rmse,r_pearson))
-        print('%.20f %.20f %.12f %.12f' %(alpha_value,gamma_value,rmse,r_pearson))
+        #print('%.20f %.20f %.12f %.12f' %(alpha_value,gamma_value,rmse,r_pearson))
+        graph_x_row.append(alpha_value)
+        graph_y_row.append(gamma_value)
+        graph_z_row.append(rmse)
         #print('#################')
-        
+    print('new alpha:', alpha_value)
+    graph_x.append(graph_x_row)
+    graph_y.append(graph_y_row)
+    graph_z.append(graph_z_row)
+
+plt.xscale('log')
+contour=plt.contourf(graph_x, graph_y, graph_z, levels=np.arange(1.0,2.0,0.05),cmap='Greys',vmin=1.1,vmax=2.0,extend='both',zorder=0)
+contour_lines=plt.contour(graph_x, graph_y, graph_z, levels=np.arange(1.0,2.0,0.05),linewidths=1,colors='k',vmin=1.1,vmax=2.0,extend='both',zorder=1)
+plt.clabel(contour_lines,levels=np.arange(1.0,1.7,0.1),inline=1,colors="C0",fontsize=8,fmt='%1.1f')
+cbar=plt.colorbar(contour)
+cbar.set_label("$RMSE$", fontsize=14)
+plt.xlabel(r'$\alpha$',fontsize=14)
+plt.ylabel(r'$\gamma$',fontsize=14)
+file_name = 'Figure2.png'
+plt.savefig(file_name,format='png',dpi=600)
+#plt.show()
