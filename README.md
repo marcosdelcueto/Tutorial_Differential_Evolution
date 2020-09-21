@@ -1,5 +1,5 @@
 # Tutorial_Differential_Evolution
-This repository contains the code, data and images used in the [Genetic Algorithm to Optimize Machine Learning Hyper-parameters](https://medium.com/@delcueto.marcos) article published in Towards Data Science
+This repository contains the code, data and images used in the [Genetic Algorithm to Optimize Machine Learning Hyper-parameters](https://medium.com/p/genetic-algorithm-to-optimize-machine-learning-hyperparameters-72bd6e2596fc?source=email-1e4964370d8--writer.postDistributed&sk=1492c86ef94ddeefc4d903d4f891ad08) article published in Towards Data Science
 
 ---
 ## Contents
